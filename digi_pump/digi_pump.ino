@@ -28,7 +28,7 @@ void setup() {
   adc_disable();          // отключить АЦП (экономия энергии)
 
   wdt_reset();            // инициализация ватчдога
-  wdt_enable(WDTO_1S);    // разрешаем ватчдог
+  wdt_enable(WDTO_8S);    // разрешаем ватчдог
   // 15MS, 30MS, 60MS, 120MS, 250MS, 500MS, 1S, 2S, 4S, 8S
 
   WDTCR |= _BV(WDIE);     // разрешаем прерывания по ватчдогу. Иначе будет резет.
@@ -40,14 +40,14 @@ void loop() {
   mainTimer++;
 
   if (!state) {                           // если помпа не включена
-    if ((long)mainTimer - myTimer > PERIOD) {   // таймер периода
+    if ((long)mainTimer - myTimer > PERIOD/8) {   // таймер периода
       myTimer = mainTimer;                // сброс таймера
       state = true;                       // флаг на запуск
       pinMode(MOS, OUTPUT);               // пин как выход
       digitalWrite(MOS, HIGH);            // врубить
     }
   } else {                                // если помпа включена
-    if ((long)mainTimer - myTimer > WORK) {     // таймер времени работы
+    if ((long)mainTimer - myTimer > WORK/8) {     // таймер времени работы
       myTimer = mainTimer;                // сброс
       state = false;                      // флаг на выкл
       digitalWrite(MOS, LOW);             // вырубить
